@@ -19,7 +19,7 @@ export interface Especie {
 })
 export class EnciclopediaService {
   // URL de tu API de FastAPI para especies
-  private apiUrl = 'http://localhost:8000/api/v1/especies'; 
+  private apiUrl = 'https://fauna-backend.onrender.com/especies'; 
 
   constructor(private http: HttpClient) {}
 
