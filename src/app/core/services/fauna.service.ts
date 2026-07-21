@@ -16,7 +16,7 @@ export interface EspecieResponse {
 })
 export class FaunaService {
   // Endpoint apuntando únicamente a especies
-  private apiUrl = 'https://fauna-backend.onrender.com';
+  private apiUrl = `${environment.apiUrl}/incidentes`;
 
   constructor(private http: HttpClient) {}
 
