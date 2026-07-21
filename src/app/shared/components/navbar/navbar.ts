@@ -4,6 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, switchMap, of, catchError } from 'rxjs';
 import { AuthService, UsuarioRealSession } from '../../../core/services/auth.service';
+import { environment } from '../../../environments/environment';
 
 export interface UsuarioDB {
   id_usuario: number;
@@ -21,7 +22,7 @@ export interface UsuarioDB {
 })
 export class NavbarComponent {
   usuario$: Observable<UsuarioRealSession | null>;
-  private apiUrl = 'http://localhost:8000/api/v1/usuarios';
+  private apiUrl = `${environment.apiUrl}/usuarios`;
 
   constructor(
     public authService: AuthService, 
