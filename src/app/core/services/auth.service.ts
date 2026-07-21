@@ -23,7 +23,7 @@ export interface UsuarioDB {
 })
 export class AuthService {
   usuario$: Observable<User | null>;
-  private apiUrl = 'http://localhost:8000/api/v1/usuarios';
+  private apiUrl = 'https://fauna-backend.onrender.com/usuarios';
 
   constructor(
     private auth: Auth,
