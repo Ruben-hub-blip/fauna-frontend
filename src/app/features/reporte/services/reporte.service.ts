@@ -20,7 +20,7 @@ export interface IncidenteResponse {
   providedIn: 'root'
 })
 export class ReporteService {
-  private apiUrl = 'http://localhost:8000/api/v1/incidentes';
+  private apiUrl = 'https://fauna-backend.onrender.com/incidentes';
 
   constructor(private http: HttpClient) {}
 
