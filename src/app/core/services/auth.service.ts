@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, deleteUser } from 'firebase/auth';
 import { Observable, firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface UsuarioRealSession {
   uid: string;
