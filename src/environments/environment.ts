@@ -1,7 +1,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://127.0.0.1:8000',
+  apiUrl: 'https://fauna-backend.onrender.com',
   firebase: {
     apiKey: "AIzaSyBWvbEl5UcpxSqsVNmM2GhCV156r0WXtRs",       // Tu clave real copiada de Firebase
     authDomain: "bioguard-85c3f.firebaseapp.com",    // Tu dominio real
