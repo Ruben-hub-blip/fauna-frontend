@@ -31,7 +31,7 @@ export class AdminUsuariosPage implements OnInit {
   editando: boolean = false;
   idEdicion: number | null = null;
   cargando: boolean = false;
-  apiUrl = 'http://localhost:8000/api/v1/usuarios';
+  apiUrl = 'https://fauna-backend.onrender.com/usuarios';
 
   constructor(
     private http: HttpClient, 
