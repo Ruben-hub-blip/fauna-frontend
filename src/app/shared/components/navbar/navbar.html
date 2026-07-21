@@ -1,0 +1,82 @@
+<div class="bioguard-navbar" *ngIf="usuario$ | async as user">
+  <div class="nav-container">
+    
+    <a class="nav-logo" routerLink="/principal">
+      <i class="bi bi-tree-fill text-warning me-2"></i>BioGuard
+    </a>
+
+    <div class="nav-menu-center">
+      <ul class="nav-links-list">
+        <li><a class="nav-link-custom" routerLink="/principal" routerLinkActive="active">Mapa</a></li>
+        <li><a class="nav-link-custom" routerLink="/reportar" routerLinkActive="active">Reportar</a></li>
+        <li><a class="nav-link-custom" routerLink="/mis-reportes" routerLinkActive="active">Mis Reportes</a></li>
+        <li><a class="nav-link-custom" routerLink="/enciclopedia" routerLinkActive="active">Enciclopedia</a></li>
+        <li><a class="nav-link-custom" routerLink="/consejos" routerLinkActive="active">Consejos</a></li>
+        
+        <!-- Estadísticas: Visible para Autoridades y Admin -->
+        <li *ngIf="user.rol === 'autoridad' || user.rol === 'administrador'">
+          <a class="nav-link-custom" routerLink="/estadisticas" routerLinkActive="active">Estadísticas</a>
+        </li>
+
+        <!-- 🛠️ NUEVO: Menú desplegable exclusivo para Administración -->
+        <li class="nav-item dropdown" *ngIf="user.rol === 'administrador'">
+          <a class="nav-link-custom admin-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-gear-fill me-1"></i>Administración
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            <li>
+              <a class="dropdown-item" routerLink="/admin/gestion" routerLinkActive="active">
+                <i class="bi bi-plus-circle me-2"></i>Crear Especie
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/admin/usuarios" routerLinkActive="active">
+                <i class="bi bi-people me-2"></i>Gestión de Usuarios
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Panel Oficial: Visible para Autoridad y Admin -->
+        <li class="nav-item dropdown" *ngIf="user.rol === 'autoridad' || user.rol === 'administrador'">
+          <a class="nav-link-custom oficial-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-shield-lock-fill me-1"></i>Panel Oficial
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            <li>
+              <a class="dropdown-item" routerLink="/autoridades" routerLinkActive="active">
+                <i class="bi bi-inbox me-2"></i>Moderación (Pendientes)
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/autoridades/aprobados" routerLinkActive="active">
+                <i class="bi bi-check2-square me-2"></i>Atención de Casos
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-auth-right">
+      <div class="user-logged-box">
+        <span class="user-badge">
+          <i class="bi bi-person-circle text-warning me-1"></i>
+          {{ (user.email || '').split('@')[0] }} ({{ user.rol | titlecase }})
+        </span>
+        <button class="btn-salir" (click)="ejecutarCerrarSesion()">
+          <i class="bi bi-power"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bioguard-navbar" *ngIf="!(usuario$ | async)">
+  <div class="nav-container">
+    <a class="nav-logo" routerLink="/principal">BioGuard</a>
+    <div class="nav-auth-right">
+      <button class="btn-entrar" routerLink="/login">ENTRAR</button>
+    </div>
+  </div>
+</div>

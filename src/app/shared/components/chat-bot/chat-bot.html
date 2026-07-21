@@ -1,0 +1,24 @@
+<!-- Botón flotante -->
+<button class="chat-launcher" (click)="toggleChat()">
+  <span *ngIf="!isOpen">💬</span>
+  <span *ngIf="isOpen">✖</span>
+</button>
+
+<!-- Ventana de Chat -->
+<div class="chat-window" *ngIf="isOpen">
+  <div class="chat-header">
+    Asistente Fauna BQ
+  </div>
+  
+  <div class="chat-body" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+    <div *ngFor="let msg of messages" [ngClass]="msg.type">
+      {{ msg.text }}
+    </div>
+    <div *ngIf="loading" class="bot">Escribiendo...</div>
+  </div>
+
+  <div class="chat-footer">
+    <input [(ngModel)]="userInput" (keyup.enter)="sendMessage()" placeholder="Pregunta algo..." />
+    <button (click)="sendMessage()">➤</button>
+  </div>
+</div>

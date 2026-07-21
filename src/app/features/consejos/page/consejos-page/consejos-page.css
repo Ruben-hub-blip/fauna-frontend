@@ -1,0 +1,38 @@
+/* Transición y elevación sutil de las tarjetas del acordeón */
+.accordion-item {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.accordion-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Personalización del estado activo del acordeón nativo de Bootstrap */
+.accordion-button:not(.collapsed) {
+  background-color: rgba(25, 135, 84, 0.08) !important; /* Tono verde ecológico sutil */
+  color: #198754 !important;                           /* Color verde institucional */
+  box-shadow: none !important;                          /* Anulación del focus azul */
+}
+
+/* Anulación de la caja de enfoque por defecto del navegador */
+.accordion-button:focus {
+  box-shadow: none !important;
+  border-color: rgba(25, 135, 84, 0.2) !important;
+}
+
+/* Sombra extra sutil para capas limpias */
+.shadow-xs {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+/* Animación de latido optimizada mediante hardware gráfico */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.04); opacity: 0.85; }
+}
+
+.animate-pulse-icon {
+  animation: pulse 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}

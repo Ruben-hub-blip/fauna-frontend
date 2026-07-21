@@ -1,0 +1,45 @@
+/* --- Interacciones de Lista --- */
+.hover-row-interaction {
+  transition: all 0.2s ease-in-out;
+}
+
+.hover-row-interaction:hover {
+  background-color: rgba(209, 231, 221, 0.3) !important;
+  cursor: pointer;
+}
+
+.table-active {
+  background-color: rgba(25, 135, 84, 0.15) !important;
+  border-left: 4px solid #198754 !important;
+}
+
+/* --- Transiciones suave --- */
+.transition-all {
+  transition: all 0.3s ease-in-out;
+}
+
+/* --- Control de Tarjetas --- */
+.card {
+  border-radius: 0.75rem;
+}
+
+.btn-outline-success {
+  border-radius: 20px;
+}
+
+.sticky-top {
+  z-index: 10;
+}
+
+.caso-resuelto-row {
+  background-color: #f1f3f5 !important;
+  opacity: 0.75;
+}
+
+.caso-resuelto-row:hover {
+  background-color: #e9ecef !important;
+}
+
+.opacity-50 {
+  opacity: 0.5;
+}

@@ -1,0 +1,175 @@
+<app-navbar></app-navbar>
+
+<div class="container-fluid px-4 my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-success"><i class="bi bi-shield-check"></i> Gestión de Casos Aprobados</h2>
+    <button class="btn btn-danger shadow-sm" (click)="descargarPDF()">
+      <i class="bi bi-file-pdf"></i> Exportar informe PDF
+    </button> 
+  </div>
+
+  <!-- Barra de Filtros -->
+  <div class="card shadow-sm mb-4 border-0">
+    <div class="card-body bg-light rounded-3">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <input type="text" class="form-control" placeholder="Buscar por especie..." [(ngModel)]="filtroEspecie" (input)="filtrarCasos()">
+        </div>
+        <div class="col-md-4">
+          <select class="form-select" [(ngModel)]="filtroUbicacion" (change)="filtrarCasos()">
+            <option value="">Todas las Ubicaciones</option>
+            <option *ngFor="let ubi of ubicacionesDisponibles" [value]="ubi">{{ ubi }}</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <select class="form-select" [(ngModel)]="filtroEstado" (change)="filtrarCasos()">
+            <option value="Todos">Todos los Estados</option>
+            <option value="Aprobado">Activos (Aprobados)</option>
+            <option value="Resuelto">Resueltos / Atendidos</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layout Maestro - Detalle -->
+  <div class="row g-4">
+    
+    <!-- Tabla de Casos -->
+    <div [ngClass]="casoSeleccionado ? 'col-lg-7' : 'col-12'" class="transition-all">
+      <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>IDENTIFICACIÓN</th>
+                <th>Especie</th>
+                <th>Ubicación</th>
+                <th>Estado</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let inc of casosFiltrados" 
+                  class="hover-row-interaction"
+                  [class.caso-resuelto-row]="inc.estado === 'Resuelto'"
+                  [class.table-active]="casoSeleccionado?.id_incidente === inc.id_incidente"
+                  (click)="seleccionarCaso(inc)">
+                <td><strong>#{{inc.id_incidente}}</strong></td>
+                <td>
+                  <span [class.text-decoration-line-through]="inc.estado === 'Resuelto'"
+                        [class.text-muted]="inc.estado === 'Resuelto'"
+                        class="fw-semibold text-dark">
+                    {{inc.nombre_especie || 'No especificada'}}
+                  </span>
+                </td>
+                <td><small class="text-muted"><i class="bi bi-geo-alt"></i> {{inc.ubicacion}}</small></td>
+                <td>
+                  <span class="badge" 
+                        [ngClass]="inc.estado === 'Resuelto' ? 'bg-secondary text-light' : 'bg-success'">
+                    {{inc.estado === 'Resuelto' ? 'Resuelto' : 'Activo'}}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-sm btn-outline-success" (click)="seleccionarCaso(inc); $event.stopPropagation()">
+                    <i class="bi bi-eye"></i> Detalle
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="casosFiltrados.length === 0">
+                <td colspan="5" class="text-center py-4 text-muted">
+                  <i class="bi bi-inbox fs-3 d-block mb-2"></i> No se encontraron casos con los filtros seleccionados.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjeta de Detalle del Caso -->
+    <div class="col-lg-5" *ngIf="casoSeleccionado">
+      <div class="card shadow-sm border-0 border-top border-4 sticky-top" 
+           [ngClass]="casoSeleccionado.estado === 'Resuelto' ? 'border-secondary' : 'border-success'"
+           style="top: 20px;">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+          <h5 class="fw-bold mb-0" [ngClass]="casoSeleccionado.estado === 'Resuelto' ? 'text-secondary' : 'text-success'">
+            <i class="bi bi-file-earmark-medical me-1"></i> Detalle del Caso #{{casoSeleccionado.id_incidente}}
+          </h5>
+          <button type="button" class="btn-close" aria-label="Cerrar" (click)="cerrarDetalle()"></button>
+        </div>
+        
+        <div class="card-body">
+          <!-- Imagen Evidencia -->
+          <div class="mb-3 text-center bg-light rounded overflow-hidden shadow-sm" style="max-height: 230px;">
+            <img [src]="getImagenSrc(casoSeleccionado.imagen_base64)" 
+                 class="img-fluid rounded" 
+                 [class.opacity-50]="casoSeleccionado.estado === 'Resuelto'"
+                 alt="Foto del reporte"
+                 style="object-fit: cover; width: 100%; max-height: 230px;">
+          </div>
+
+          <!-- Badges de Estado y Prioridad Interactivos -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="badge px-3 py-2" [ngClass]="casoSeleccionado.estado === 'Resuelto' ? 'bg-secondary' : 'bg-success'">
+              Estado: {{casoSeleccionado.estado}}
+            </span>
+            
+            <!-- Selector de Prioridad -->
+            <div class="d-flex align-items-center gap-1">
+              <small class="fw-bold text-muted me-1">Prioridad:</small>
+              <select class="form-select form-select-sm w-auto" 
+                      [ngModel]="casoSeleccionado.prioridad || 'Baja'"
+                      (ngModelChange)="actualizarPrioridad(casoSeleccionado, $event)">
+                <option value="Alta">Alta</option>
+                <option value="Media">Media</option>
+                <option value="Baja">Baja</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="list-group list-group-flush mb-3">
+            <div class="list-group-item px-0">
+              <small class="text-muted d-block">Especie / Animal</small>
+              <span class="fw-bold fs-6" [class.text-decoration-line-through]="casoSeleccionado.estado === 'Resuelto'">
+                {{casoSeleccionado.nombre_especie || 'No especificada'}}
+              </span>
+            </div>
+            <div class="list-group-item px-0">
+              <small class="text-muted d-block">Ubicación / Coordenadas</small>
+              <span class="fw-semibold text-dark"><i class="bi bi-pin-map text-danger me-1"></i>{{casoSeleccionado.ubicacion}}</span>
+            </div>
+            <div class="list-group-item px-0">
+              <small class="text-muted d-block">Fecha de Reporte</small>
+              <span>{{casoSeleccionado.fecha | date:'fullDate'}}</span>
+            </div>
+            <div class="list-group-item px-0">
+              <small class="text-muted d-block">Descripción de la Situación</small>
+              <p class="mb-0 text-secondary bg-light p-2 rounded small border mt-1">
+                {{casoSeleccionado.descripcion || 'Sin descripción adicional.'}}
+              </p>
+            </div>
+          </div>
+
+          <!-- Botón Dinámico de Resolución -->
+          <div class="d-grid gap-2 pt-2">
+            <button *ngIf="casoSeleccionado.estado !== 'Resuelto'" 
+                    class="btn btn-success" 
+                    (click)="cambiarEstadoCaso(casoSeleccionado, 'Resuelto')">
+              <i class="bi bi-check2-circle me-1"></i> Marcar Caso como Atendido / Resuelto
+            </button>
+
+            <button *ngIf="casoSeleccionado.estado === 'Resuelto'" 
+                    class="btn btn-outline-secondary" 
+                    (click)="cambiarEstadoCaso(casoSeleccionado, 'Aprobado')">
+              <i class="bi bi-arrow-counterclockwise me-1"></i> Reabrir Caso (Marcar como Activo)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<app-footer></app-footer>

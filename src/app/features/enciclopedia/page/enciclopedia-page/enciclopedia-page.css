@@ -1,0 +1,17 @@
+.hover-card-interaction {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card-interaction:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.08) !important;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}

@@ -1,0 +1,138 @@
+<app-navbar></app-navbar>
+<div class="container form-container my-4">
+  
+  <div class="row mb-4">
+    <div class="col-12 text-center text-md-start border-bottom pb-3">
+      <h2 class="form-title text-success fw-bold m-0">
+        <i class="bi bi-geo-alt-fill text-danger me-1"></i> Registrar Avistamiento de Fauna Silvestre
+      </h2>
+      <p class="text-muted m-0 small">Reporta animales heridos, fuera de su hábitat o en peligro inmediato tocando el mapa de abajo.</p>
+    </div>
+  </div>
+
+  <div *ngIf="mostrarExito" class="alert alert-success d-flex align-items-center alert-success-animate mb-4 shadow-sm" role="alert">
+    <i class="bi bi-check-circle-fill me-2 fs-5 text-white animate-bounce"></i>
+    <div>
+      <strong>¡Reporte enviado con éxito!</strong> El caso se guardó en tu base de datos central de FastAPI. Redirigiendo al mapa general...
+    </div>
+  </div>
+
+  <div class="row g-4">
+    
+    <div class="col-12 col-lg-6">
+      <div class="card form-card p-4 bg-white shadow-sm border-0 rounded-3">
+        <form [formGroup]="reporteForm" (ngSubmit)="enviarFormulario()">
+          
+          <div class="row g-3">
+            
+            <div class="col-12">
+              <label class="form-label form-label-custom fw-semibold">Animal / Especie Observada <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted"><i class="bi bi-bug-fill"></i></span>
+                <input 
+                  type="text" 
+                  formControlName="especie"
+                  class="form-control form-input-custom" 
+                  [ngClass]="{'is-invalid': campoInvalido('especie')}"
+                  placeholder="Ej: Iguana Verde, Tortuga Morrocoy..." 
+                >
+                <div class="invalid-feedback">El nombre del animal es obligatorio (Mínimo 3 letras).</div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label form-label-custom fw-semibold">Coordenadas del Avistamiento <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted"><i class="bi bi-pin-map-fill text-danger"></i></span>
+                <input 
+                  type="text" 
+                  formControlName="ubicacion"
+                  class="form-control form-input-custom bg-light" 
+                  [ngClass]="{'is-invalid': campoInvalido('ubicacion')}"
+                  placeholder="Haz clic en el mapa de la derecha para capturar la ubicación" 
+                  readonly
+                >
+                <div class="invalid-feedback">Debes marcar un punto en el mapa interactivo para capturar la coordenada.</div>
+              </div>
+              <small class="text-muted extra-small mt-1 d-block"><i class="bi bi-info-circle"></i> Este campo se llena solo al tocar el mapa.</small>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label form-label-custom fw-semibold">Nivel de Emergencia</label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-muted"><i class="bi bi-exclamation-triangle-fill"></i></span>
+                <select formControlName="prioridad" class="form-select form-input-custom">
+                  <option value="Baja">Baja (Solo avistamiento)</option>
+                  <option value="Media">Media (Atrapado o desorientado)</option>
+                  <option value="Alta">Alta (Herido o en peligro extremo)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label form-label-custom fw-semibold">Evidencia Fotográfica</label>
+              <div class="input-group">
+                <input 
+                  type="file" 
+                  class="form-control form-input-custom" 
+                  id="inputFoto" 
+                  accept="image/*"
+                  (change)="alSeleccionarImagen($event)"
+                >
+                <label class="input-group-text bg-light text-muted" for="inputFoto"><i class="bi bi-cloud-upload-fill"></i></label>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label form-label-custom fw-semibold">Descripción de la Situación</label>
+              <textarea 
+                formControlName="descripcion"
+                class="form-control form-textarea-custom" 
+                rows="3" 
+                [ngClass]="{'is-invalid': campoInvalido('descripcion')}"
+                placeholder="Describe el estado del animal o detalles adicionales..."
+              ></textarea>
+              <div class="invalid-feedback">La descripción no puede exceder los 250 caracteres.</div>
+            </div>
+
+            <div class="col-12 my-2">
+              <div class="form-check form-switch">
+                <input 
+                  type="checkbox" 
+                  formControlName="contactoAnonimo"
+                  class="form-check-input" 
+                  id="switchAnonimo"
+                >
+                <label class="form-check-label text-secondary small" for="switchAnonimo">Ocultar mis datos (Reporte completamente anónimo)</label>
+              </div>
+            </div>
+
+            <div class="col-12 border-top pt-3 d-flex justify-content-end gap-2">
+              <button type="button" class="btn btn-light btn-sm px-3" routerLink="/principal">Cancelar</button>
+              <button type="submit" class="btn btn-success btn-sm px-4 fw-bold shadow-sm">
+                <i class="bi bi-send-fill me-1"></i> Enviar Reporte
+              </button>
+            </div>
+
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm border-0 rounded-3 overflow-hidden h-100 d-flex flex-column" style="min-height: 450px;">
+        <div class="card-header bg-dark text-white fw-bold py-3 d-flex align-items-center justify-content-between">
+          <span><i class="bi bi-map-fill text-success me-2"></i> Selector Geográfico Interactivo</span>
+          <span class="badge bg-success rounded-pill font-monospace" style="font-size: 0.7rem;">PASO 2: TOCA EL MAPA</span>
+        </div>
+        <div class="card-body p-0 flex-grow-1 position-relative">
+          <div id="map-selector" class="w-100 h-100" style="min-height: 450px; display: block; z-index: 1;"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<app-footer></app-footer>

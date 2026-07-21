@@ -1,0 +1,19 @@
+/* Transición fluida para el sombreado e iluminación de las filas al pasar el mouse */
+.hover-row-interaction {
+  transition: all 0.2s ease-in-out;
+}
+
+.hover-row-interaction:hover {
+  background-color: rgba(248, 249, 250, 0.9) !important;
+  cursor: pointer;
+}
+
+/* Animación de pulso controlada para el icono de campana superior */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

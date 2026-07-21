@@ -1,0 +1,111 @@
+<app-navbar>  </app-navbar>
+<div class="bioguard-dashboard">
+  
+  <div class="dashboard-header-block">
+    <h2 class="dashboard-main-title">
+      <i class="bi bi-bar-chart-line-fill text-success"></i> Indicadores y Analítica de Fauna
+    </h2>
+    <p class="dashboard-subtitle text-muted">Consolidado métrico en tiempo real proveído por el EstadisticasService corporativo.</p>
+  </div>
+
+  <div class="metrics-flex-row">
+    
+    <div class="metric-custom-box border-dark-left">
+      <div class="metric-box-content">
+        <span class="metric-box-label">Casos Totales</span>
+        <h3 class="metric-box-number">{{ resumen.totalCasos }}</h3>
+      </div>
+      <div class="metric-box-icon bg-dark-light text-dark">
+        <i class="bi bi-folder-fill"></i>
+      </div>
+    </div>
+
+    <div class="metric-custom-box border-success-left">
+      <div class="metric-box-content">
+        <span class="metric-box-label">Casos Atendidos</span>
+        <h3 class="metric-box-number">{{ resumen.atendidos }}</h3>
+      </div>
+      <div class="metric-box-icon bg-success-light text-success">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+    </div>
+
+    <div class="metric-custom-box border-warning-left">
+      <div class="metric-box-content">
+        <span class="metric-box-label">En Proceso</span>
+        <h3 class="metric-box-number">{{ resumen.enProceso }}</h3>
+      </div>
+      <div class="metric-box-icon bg-warning-light text-warning-dark">
+        <i class="bi bi-gear-fill"></i>
+      </div>
+    </div>
+
+    <div class="metric-custom-box border-danger-left">
+      <div class="metric-box-content">
+        <span class="metric-box-label">Casos Críticos</span>
+        <h3 class="metric-box-number">{{ resumen.criticos }}</h3>
+      </div>
+      <div class="metric-box-icon bg-danger-light text-danger">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="charts-flex-row">
+    
+    <div class="chart-custom-container style-width-65">
+      <div class="chart-box-header">
+        <i class="bi bi-geo-alt-fill text-success me-2"></i> Incidencia y Distribución Geográfica por Localidades
+      </div>
+      <div class="chart-box-display table-responsive-container">
+        <table class="dashboard-custom-table">
+          <thead>
+            <tr>
+              <th>Nombre de la Zona / Localidad</th>
+              <th class="text-center">Reportes</th>
+              <th>Porcentaje e Impacto Visual</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let metric of zonasMetrics">
+              <td class="fw-bold text-dark text-truncate-custom">{{ metric.zona }}</td>
+              <td class="text-center">
+                <span class="badge-count">#{{ metric.totalReportes }}</span>
+              </td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="progress flex-grow-1 shadow-xs" style="height: 10px; margin: 0;">
+                    <div 
+                      class="progress-bar progress-bar-striped progress-bar-animated" 
+                      [ngClass]="metric.colorBarra"
+                      role="progressbar" 
+                      [style.width.%]="metric.porcentaje"
+                    ></div>
+                  </div>
+                  <span class="small font-monospace fw-bold text-secondary">{{ metric.porcentaje }}%</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="chart-custom-container style-width-35">
+      <div class="chart-box-header">
+        <i class="bi bi-pie-chart-fill text-success me-2"></i> Cobertura Analítica
+      </div>
+      <div class="chart-box-display">
+        <div class="chart-inner-mock">
+          <i class="bi bi-shield-fill-check mock-icon"></i>
+          <span class="mock-text-main">[ Monitoreo Activo ]</span>
+          <small class="mock-text-sub text-center px-2">Datos validados mediante la inyección del EstadisticasService.</small>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+<app-footer></app-footer>

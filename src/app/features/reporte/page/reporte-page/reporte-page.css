@@ -1,0 +1,76 @@
+.form-container {
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+  max-width: 850px; /* Evita que el formulario se estire feo a lo ancho */
+}
+
+.form-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #198754;
+  border-bottom: 2px solid #dee2e6;
+  padding-bottom: 0.5rem;
+}
+
+.form-card {
+  border: none;
+  border-radius: 0.5rem;
+}
+
+.form-label-custom {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.88rem;
+  margin-bottom: 0.3rem;
+}
+
+/* EL PARCHE REY: Fuerza el tamaño estándar y compacto para los inputs y select */
+.form-input-custom {
+  height: 38px !important; /* Altura ideal estándar de Bootstrap */
+  padding: 0.375rem 0.75rem !important;
+  font-size: 0.9rem !important;
+}
+
+/* Ajuste específico para el cuadro de texto grande */
+.form-textarea-custom {
+  font-size: 0.9rem !important;
+  padding: 0.5rem 0.75rem !important;
+  height: auto !important; /* Deja que el atributo 'rows="3"' controle el alto */
+}
+
+.extra-small {
+  font-size: 0.75rem;
+}
+
+/* Animación sutil para el banner de éxito */
+.alert-success-animate {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#map-selector {
+  border-radius: 0 0 8px 8px;
+}
+
+.form-card {
+  transition: box-shadow 0.3s ease;
+}
+
+.alert-success-animate {
+  animation: slideDown 0.4s ease-out forwards;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-15px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

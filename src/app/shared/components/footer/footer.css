@@ -1,0 +1,68 @@
+/* Contenedor gris oscuro del footer */
+.bioguard-footer {
+  background-color: #212529; /* Negro/Gris Carbón de Bootstrap */
+  color: #a3a7ab;
+  padding: 2.5rem 0 1rem 0;
+  width: 100%;
+  border-top: 4px solid #198754; /* Borde superior verde ecológico */
+}
+
+/* Contenedor centrado */
+.footer-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Configuración de filas y columnas con Flexbox */
+.footer-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.footer-col {
+  flex: 1;
+  min-width: 250px; /* Evita que se aplasten en pantallas pequeñas */
+}
+
+/* Títulos del footer */
+.footer-title {
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.footer-text {
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+/* Lista de enlaces */
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  font-size: 0.88rem;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Barra de abajo de derechos reservados */
+.footer-bottom {
+  border-top: 1px solid #343a40;
+  padding-top: 1.2rem;
+  text-align: center;
+  font-size: 0.82rem;
+  color: #6c757d;
+}

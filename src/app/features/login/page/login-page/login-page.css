@@ -1,0 +1,44 @@
+
+.login-background {
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f4f6f9; 
+  padding: 1.5rem;
+}
+
+.login-card-custom {
+  width: 100%;
+  max-width: 420px;
+  border: none !important;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+  background-color: #ffffff;
+}
+
+
+.login-icon-circle {
+  width: 65px;
+  height: 65px;
+  background-color: #e8f5e9;
+  color: #198754;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin: 0 auto 1rem auto;
+}
+
+
+.login-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.85rem;
+}
+
+.login-input-box:focus {
+  border-color: #198754 !important;
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25) !important;
+}

@@ -1,0 +1,94 @@
+<app-navbar></app-navbar>
+
+<div class="container my-5">
+  <h2 class="fw-bold text-success mb-4"><i class="bi bi-people-fill me-2"></i>Gestión de Usuarios (CRUD Admin)</h2>
+
+  <div class="row g-4">
+    <!-- Formulario para Crear / Editar -->
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-dark text-white fw-bold">
+          {{ editando ? 'Editar Usuario / Rol' : 'Crear Nuevo Usuario' }}
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="guardarUsuario()">
+            <div class="mb-3">
+              <label class="form-label">Nombre Completo</label>
+              <input type="text" class="form-control" [(ngModel)]="usuarioForm.nombre_completo" name="nombre_completo" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Correo Electrónico</label>
+              <input type="email" class="form-control" [(ngModel)]="usuarioForm.correo_electronico" name="correo_electronico" required>
+            </div>
+            <div class="mb-3" *ngIf="!editando">
+              <label class="form-label">Contraseña</label>
+              <input type="password" class="form-control" [(ngModel)]="usuarioForm.contrasena" name="contrasena" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Rol de Sistema</label>
+              <select class="form-select" [(ngModel)]="usuarioForm.rol" name="rol" required>
+                <option value="ciudadano">Ciudadano</option>
+                <option value="autoridad">Autoridad / Oficial</option>
+                <option value="administrador">Administrador</option>
+              </select>
+            </div>
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-success" [disabled]="cargando">
+                <span *ngIf="cargando" class="spinner-border spinner-border-sm me-1"></span>
+                {{ editando ? 'Actualizar Usuario' : 'Registrar Usuario' }}
+              </button>
+              <button type="button" *ngIf="editando" class="btn btn-outline-secondary" (click)="resetForm()">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de Usuarios -->
+    <div class="col-md-8">
+      <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Correo Electrónico</th>
+                <th>Rol</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let u of listaUsuarios">
+                <td><strong>#{{u.id_usuario}}</strong></td>
+                <td>{{u.nombre_completo}}</td>
+                <td>{{u.correo_electronico}}</td>
+                <td>
+                  <span class="badge" 
+                        [ngClass]="{
+                          'bg-primary': u.rol === 'administrador',
+                          'bg-warning text-dark': u.rol === 'autoridad',
+                          'bg-secondary': u.rol === 'ciudadano'
+                        }">
+                    {{u.rol | uppercase}}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-sm btn-outline-primary me-1" (click)="seleccionarParaEditar(u)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <!-- 🎯 Se pasa id_usuario y correo_electronico para sincronizar con Firebase -->
+                  <button class="btn btn-sm btn-outline-danger" (click)="eliminarUsuario(u.id_usuario!, u.correo_electronico)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

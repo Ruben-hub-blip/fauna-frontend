@@ -1,0 +1,79 @@
+<app-navbar></app-navbar>
+
+<div class="container py-5 bg-light min-vh-100">
+  
+  <div class="row mb-4">
+    <div class="col-12 text-center text-md-start border-bottom pb-3">
+      <h2 class="text-success fw-bold m-0 tracking-tight">
+        <i class="bi bi-book-half me-2"></i> Enciclopedia de Fauna Silvestre
+      </h2>
+      <p class="text-muted m-0">Catálogo oficial de especies catalogadas y protegidas en el distrito de Barranquilla.</p>
+    </div>
+  </div>
+
+  <div class="row mb-5 justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="input-group shadow-sm rounded">
+        <span class="input-group-text bg-white border-end-0 text-muted">
+          <i class="bi bi-search"></i>
+        </span>
+        <input 
+          type="text" 
+          [(ngModel)]="textoBusqueda" 
+          (input)="filtrarFauna()" 
+          class="form-control border-start-0 ps-1" 
+          placeholder="Buscar por nombre común o científico..."
+        >
+      </div>
+      <div *ngIf="especiesFiltradas.length === 0" class="text-center mt-4">
+        <p class="text-muted small italic">No se encontraron especies que coincidan con tu búsqueda.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="col animate-fade-in" *ngFor="let animal of especiesFiltradas">
+      <div class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden hover-card-interaction">
+        
+        <div class="position-relative" style="height: 220px; overflow: hidden;">
+          <img [src]="animal.imagen" [alt]="animal.nombre" class="w-100 h-100 object-fit-cover">
+          
+          <span class="badge position-absolute top-3 end-3 rounded-pill px-3 py-2 text-uppercase font-monospace border"
+                [ngClass]="{
+                  'bg-danger text-white border-danger': animal.estadoConservacion === 'En Peligro Crítico',
+                  'bg-warning text-dark border-warning': animal.estadoConservacion === 'Vulnerable',
+                  'bg-success text-white border-success': animal.estadoConservacion === 'Preocupación Menor'
+                }"
+                style="font-size: 0.72rem; letter-spacing: 0.5px; right: 15px; top: 15px;">
+            {{ animal.estadoConservacion }}
+          </span>
+        </div>
+
+        <div class="card-body p-4">
+          <h5 class="card-title text-dark fw-bold mb-1">{{ animal.nombre }}</h5>
+          <h6 class="card-subtitle text-muted italic mb-3 font-monospace" style="font-size: 0.85rem;">
+            <i>{{ animal.nombreCientifico }}</i>
+          </h6>
+          <p class="card-text text-secondary mb-0" style="font-size: 0.9rem; line-height: 1.5; text-align: justify;">
+            {{ animal.descripcion }}
+          </p>
+        </div>
+
+        <div class="card-footer bg-white border-0 px-4 pb-4 pt-0">
+          <div class="d-flex align-items-center justify-content-between border-top pt-3">
+            <span class="text-muted small font-monospace">
+              <i class="bi bi-tag-fill text-success me-1"></i> ID #{{ animal.id }}
+            </span>
+            <span class="text-success fw-bold small">
+              <i class="bi bi-shield-fill-check me-1"></i> Protegido
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<app-footer></app-footer>

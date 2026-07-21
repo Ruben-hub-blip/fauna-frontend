@@ -1,0 +1,63 @@
+<div class="login-background">
+  <div class="card login-card-custom p-4">
+    <div class="card-body">
+      
+      <div class="login-icon-circle shadow-sm">
+        <i class="bi bi-shield-lock-fill"></i>
+      </div>
+      <h4 class="text-center fw-bold text-dark mb-1">Portal BioGuard</h4>
+      <p class="text-center text-muted small mb-4">Ingresa tus credenciales según tu rol asignado.</p>
+
+      <div *ngIf="errorLogin" class="alert alert-danger small p-2 text-center mb-3 rounded shadow-sm" role="alert">
+        <i class="bi bi-exclamation-circle-fill me-1"></i> Usuario o contraseña incorrectos.
+      </div>
+
+      <form (ngSubmit)="procesarLogin()">
+        
+        <div class="mb-3">
+          <label class="form-label login-label">Correo Electrónico</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope-fill"></i></span>
+            <input 
+              type="email" 
+              name="userInput"
+              [(ngModel)]="userInput"
+              class="form-control login-input-box" 
+              placeholder="ejemplo@correo.com"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label login-label">Contraseña</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light text-muted"><i class="bi bi-key-fill"></i></span>
+            <input 
+              type="password" 
+              name="passInput"
+              [(ngModel)]="passInput"
+              class="form-control login-input-box" 
+              placeholder="••••••••"
+              required
+            >
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow-sm">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar Sesión
+        </button>
+
+      </form>
+
+      <div class="mt-4 pt-3 border-top text-center bg-light rounded p-2 border">
+        <small class="text-muted d-block mb-1 fw-bold">
+          <i class="bi bi-info-circle-fill text-success"></i> Credenciales del AuthService:
+        </small>
+        <code class="d-block small text-dark mb-1">Ciudadano: ciudadano@email.com / ciudadano123</code>
+        <code class="d-block small text-dark">Autoridad: oficial@bioguard.com / oficial123</code>
+      </div>
+
+    </div>
+  </div>
+</div>
