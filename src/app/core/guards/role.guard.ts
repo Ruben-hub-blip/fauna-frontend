@@ -3,6 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { map, take, switchMap, of, catchError } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface UsuarioDB {
   id_usuario: number;
@@ -16,7 +17,7 @@ export const roleGuard = (rolesPermitidos: Array<'administrador' | 'autoridad' |
     const authService = inject(AuthService);
     const router = inject(Router);
     const http = inject(HttpClient);
-    const apiUrl = 'https://fauna-backend.onrender.com/usuarios/';
+    const apiUrl = `${environment.apiUrl}/usuarios/`;
 
     return authService.usuario$.pipe(
       take(1),
