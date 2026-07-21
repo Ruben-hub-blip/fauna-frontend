@@ -15,7 +15,7 @@ export interface EspecieResponse {
   providedIn: 'root'
 })
 export class AdminFormService {
-  private apiUrl = 'http://localhost:8000/api/v1/especies'; 
+  private apiUrl = 'https://fauna-backend.onrender.com/especies'; 
 
   constructor(private http: HttpClient) {}
 
