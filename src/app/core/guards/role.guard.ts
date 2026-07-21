@@ -16,7 +16,7 @@ export const roleGuard = (rolesPermitidos: Array<'administrador' | 'autoridad' |
     const authService = inject(AuthService);
     const router = inject(Router);
     const http = inject(HttpClient);
-    const apiUrl = 'http://localhost:8000/api/v1/usuarios';
+    const apiUrl = 'https://fauna-backend.onrender.com/usuarios/';
 
     return authService.usuario$.pipe(
       take(1),
