@@ -78,53 +78,45 @@ export class AuthService {
     }
   }
 
-  /**
-   * Autentica con Firebase y resuelve el rol real consultando PostgreSQL (NeonDB).
-   */
-  async loginConFirebaseReal(email: string, pass: string): Promise<UsuarioRealSession> {
-    const userCredential = await signInWithEmailAndPassword(this.auth, email, pass);
-    const fbUser = userCredential.user;
-    const correoLimpio = fbUser.email?.toLowerCase().trim() || '';
+ // src/app/core/services/auth.service.ts
 
-    let rolAsignado: 'administrador' | 'autoridad' | 'ciudadano' = 'ciudadano';
+async loginConFirebaseReal(email: string, pass: string): Promise<UsuarioRealSession> {
+  // 1. Autenticación en Firebase
+  const userCredential = await signInWithEmailAndPassword(this.auth, email, pass);
+  const fbUser = userCredential.user;
 
-    // Regla especial para cuenta raíz por defecto
-    if (correoLimpio === 'admin@bioguard.com') {
-      rolAsignado = 'administrador';
-    } else if (correoLimpio === 'oficial@bioguard.com') {
-      rolAsignado = 'autoridad';
-    } else {
-      // Consulta dinámica a la API / PostgreSQL
-      try {
-        const usuarios = await firstValueFrom(this.http.get<UsuarioDB[]>(this.apiUrl));
-        const usuarioEncontrado = usuarios.find(
-          u => u.correo_electronico.toLowerCase().trim() === correoLimpio
-        );
+  let rolAsignado: 'administrador' | 'autoridad' | 'ciudadano' = 'ciudadano';
 
-        if (usuarioEncontrado) {
-          const rolDb = usuarioEncontrado.rol.toLowerCase().trim();
-          // Mapeo explicito del ENUM 'administrador' a 'admin' para Angular
-          if (rolDb === 'administrador') {
-            rolAsignado = 'administrador';
-          } else if (rolDb === 'autoridad') {
-            rolAsignado = 'autoridad';
-          } else {
-            rolAsignado = 'ciudadano';
-          }
-        }
-      } catch (err) {
-        console.warn('Error al verificar el rol en PostgreSQL:', err);
+  try {
+    // 2. Llamada directa al login de tu Backend en Render
+    // Esto es mucho más seguro y eficiente
+    const resBackend: any = await firstValueFrom(
+      this.http.post(`${this.apiUrl}/login`, {
+        correo_electronico: email.toLowerCase().trim(),
+        contrasena: pass
+      })
+    );
+
+    if (resBackend && resBackend.rol) {
+      const rolDb = resBackend.rol.toLowerCase().trim();
+      
+      // Mapeo exacto
+      if (rolDb === 'administrador') {
+        rolAsignado = 'administrador';
+      } else if (rolDb === 'autoridad') {
+        rolAsignado = 'autoridad';
+      } else {
+        rolAsignado = 'ciudadano';
       }
     }
-
-    return {
-      uid: fbUser.uid,
-      email: fbUser.email,
-      rol: rolAsignado
-    };
+  } catch (err) {
+    console.error('Error al obtener el rol desde Render/NeonDB:', err);
+    // Si falla el backend, puedes decidir si dejarlo como ciudadano o sacar error
   }
 
-  async cerrarSesionReal(): Promise<void> {
-    await signOut(this.auth);
-  }
+  return {
+    uid: fbUser.uid,
+    email: fbUser.email,
+    rol: rolAsignado
+  };
 }
