@@ -10,6 +10,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { NavbarComponent } from "../../../../shared/components/navbar/navbar";
 import { FooterComponent } from "../../../../shared/components/footer/footer"; 
 import * as L from 'leaflet'; 
+import { environment } from '../../../../environments/environment';
 
 export interface UsuarioDB {
   id_usuario: number;
@@ -128,7 +129,7 @@ export class ReportePage implements OnInit, AfterViewInit {
 
       // 2. Obtener el id_usuario real guardado en PostgreSQL (NeonDB)
       const correoLimpio = user.email.toLowerCase().trim();
-      const usuarios = await firstValueFrom(this.http.get<UsuarioDB[]>('http://localhost:8000/api/v1/usuarios'));
+       const usuarios = await firstValueFrom(this.http.get<UsuarioDB[]>(`${environment.apiUrl}/usuarios`));
       const usuarioDb = usuarios.find(u => u.correo_electronico.toLowerCase().trim() === correoLimpio);
 
       if (!usuarioDb) {
