@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { NavbarComponent } from '../../../../shared/components/navbar/navbar';
 import { FooterComponent } from '../../../../shared/components/footer/footer';
 import { AuthService } from '../../../../core/services/auth.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../../environments/environment';
 
 export interface Usuario {
   id_usuario?: number;
