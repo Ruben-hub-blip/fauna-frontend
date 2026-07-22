@@ -3,7 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { map, take, switchMap, of, catchError } from 'rxjs';
-import { environment } from '../../../environments/environment'; 
+import { environment } from '../../../environments/environment';
 
 export interface UsuarioDB {
   id_usuario: number;
