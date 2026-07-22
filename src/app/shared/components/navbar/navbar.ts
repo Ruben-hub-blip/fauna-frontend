@@ -4,7 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, switchMap, of, catchError } from 'rxjs';
 import { AuthService, UsuarioRealSession } from '../../../core/services/auth.service';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 export interface UsuarioDB {
   id_usuario: number;
