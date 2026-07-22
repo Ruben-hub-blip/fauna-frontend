@@ -10,7 +10,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { NavbarComponent } from "../../../../shared/components/navbar/navbar";
 import { FooterComponent } from "../../../../shared/components/footer/footer"; 
 import * as L from 'leaflet'; 
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../../environments/environment';
 
 export interface UsuarioDB {
   id_usuario: number;
