@@ -67,7 +67,7 @@ export class AuthService {
     return { uid: fbUser.uid, email: fbUser.email, rol: rolAsignado };
   }
 
-  // ESTO ES LO QUE FALTABA Y DABA ERROR EN EL NAVBAR
+  
   async cerrarSesionReal(): Promise<void> {
     await signOut(this.auth);
   }
