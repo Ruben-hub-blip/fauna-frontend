@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, deleteUser } from 'firebase/auth';
 import { Observable, firstValueFrom } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment'; // CORREGIDO
 
 export interface UsuarioRealSession {
   uid: string;
@@ -24,7 +24,7 @@ export interface UsuarioDB {
 })
 export class AuthService {
   usuario$: Observable<User | null>;
-  private apiUrl = `${environment.apiUrl}/usuarios`;
+  private apiUrl = environment.apiUrl;
 
   constructor(
     private auth: Auth,
@@ -33,91 +33,42 @@ export class AuthService {
     this.usuario$ = user(this.auth);
   }
 
-  /**
-   * Crea un usuario en Firebase mediante una instancia secundaria sin afectar la sesión activa.
-   */
   async registrarEnFirebaseAuxiliar(email: string, pass: string): Promise<string> {
     const currentApp = this.auth.app;
-    let secondaryApp;
-
-    if (getApps().find(app => app.name === 'SecondaryAdminApp')) {
-      secondaryApp = getApp('SecondaryAdminApp');
-    } else {
-      secondaryApp = initializeApp(currentApp.options, 'SecondaryAdminApp');
-    }
+    let secondaryApp = getApps().find(app => app.name === 'SecondaryAdminApp') 
+      ? getApp('SecondaryAdminApp') 
+      : initializeApp(currentApp.options, 'SecondaryAdminApp');
 
     const secondaryAuth = getAuth(secondaryApp);
     const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, pass);
     await signOut(secondaryAuth);
-    
     return userCredential.user.uid;
   }
 
-  /**
-   * Elimina un usuario de Firebase en segundo plano autenticándose con una app secundaria.
-   */
-  async eliminarDeFirebaseAuxiliar(email: string, pass: string): Promise<void> {
-    const currentApp = this.auth.app;
-    let secondaryApp;
+  async loginConFirebaseReal(email: string, pass: string): Promise<UsuarioRealSession> {
+    const userCredential = await signInWithEmailAndPassword(this.auth, email, pass);
+    const fbUser = userCredential.user;
+    let rolAsignado: 'administrador' | 'autoridad' | 'ciudadano' = 'ciudadano';
 
-    if (getApps().find(app => app.name === 'SecondaryAdminApp')) {
-      secondaryApp = getApp('SecondaryAdminApp');
-    } else {
-      secondaryApp = initializeApp(currentApp.options, 'SecondaryAdminApp');
-    }
-
-    const secondaryAuth = getAuth(secondaryApp);
     try {
-      const cred = await signInWithEmailAndPassword(secondaryAuth, email, pass);
-      if (cred.user) {
-        await deleteUser(cred.user);
+      const resBackend: any = await firstValueFrom(
+        this.http.post(`${this.apiUrl}/usuarios/login`, {
+          correo_electronico: email.toLowerCase().trim(),
+          contrasena: pass
+        })
+      );
+      if (resBackend && resBackend.rol) {
+        rolAsignado = resBackend.rol.toLowerCase().trim() as any;
       }
     } catch (err) {
-      console.warn('No se pudo eliminar el usuario de Firebase Auth:', err);
-    } finally {
-      await signOut(secondaryAuth);
+      console.error('Error obteniendo rol:', err);
     }
+
+    return { uid: fbUser.uid, email: fbUser.email, rol: rolAsignado };
   }
 
- // src/app/core/services/auth.service.ts
-
-async loginConFirebaseReal(email: string, pass: string): Promise<UsuarioRealSession> {
-  // 1. Autenticación en Firebase
-  const userCredential = await signInWithEmailAndPassword(this.auth, email, pass);
-  const fbUser = userCredential.user;
-
-  let rolAsignado: 'administrador' | 'autoridad' | 'ciudadano' = 'ciudadano';
-
-  try {
-    // 2. Llamada directa al login de tu Backend en Render
-    // Esto es mucho más seguro y eficiente
-    const resBackend: any = await firstValueFrom(
-      this.http.post(`${this.apiUrl}/login`, {
-        correo_electronico: email.toLowerCase().trim(),
-        contrasena: pass
-      })
-    );
-
-    if (resBackend && resBackend.rol) {
-      const rolDb = resBackend.rol.toLowerCase().trim();
-      
-      // Mapeo exacto
-      if (rolDb === 'administrador') {
-        rolAsignado = 'administrador';
-      } else if (rolDb === 'autoridad') {
-        rolAsignado = 'autoridad';
-      } else {
-        rolAsignado = 'ciudadano';
-      }
-    }
-  } catch (err) {
-    console.error('Error al obtener el rol desde Render/NeonDB:', err);
-    // Si falla el backend, puedes decidir si dejarlo como ciudadano o sacar error
+  // ESTO ES LO QUE FALTABA Y DABA ERROR EN EL NAVBAR
+  async cerrarSesionReal(): Promise<void> {
+    await signOut(this.auth);
   }
-
-  return {
-    uid: fbUser.uid,
-    email: fbUser.email,
-    rol: rolAsignado
-  };
 }
